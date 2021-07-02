@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="giris.css">
+<title>FİLM</title>
+</head>
+<body>
+ <section class="forms-section">
+  <div class="forms">
+    <div class="form-wrapper is-active">
+      <button type="button" class="switcher switcher-login">
+        GİRİŞ
+        <span class="underline"></span>
+      </button>
+      <form class="form form-login">
+        <fieldset>
+        
+          <div class="input-block">
+            <label for="login-email">E-mail</label>
+            <input id="login-email" type="email" required>
+          </div>
+          <div class="input-block">
+            <label for="login-password">Şifre</label>
+            <input id="login-password" type="password" required>
+          </div>
+        </fieldset>
+          
+          <button type="submit" onClick="location.href='anasayfa.html'">GİRİŞ</button>
+      
+      </form>
+    </div>
+    <div class="form-wrapper">
+      <button type="button" class="switcher switcher-signup">
+        KAYDOL
+        <span class="underline"></span>
+      </button>
+      <form class="form form-signup">
+        <fieldset>
+
+          <div class="input-block">
+            <label for="signup-email">E-mail</label>
+            <input id="signup-email" type="email" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-password">Şifre</label>
+            <input id="signup-password" type="password" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-password-confirm">Şifre Onayı</label>
+            <input id="signup-password-confirm" type="password" required>
+          </div>
+        </fieldset>
+       <button type="submit" onClick="location.href='anasayfa.html'">KAYDOL</button>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+const switchers = [...document.querySelectorAll('.switcher')]
+
+switchers.forEach(item => {
+	item.addEventListener('click', function() {
+		switchers.forEach(item => item.parentElement.classList.remove('is-active'))
+		this.parentElement.classList.add('is-active')
+	})
+})
+
+</script>
+
+</body>
+</html>

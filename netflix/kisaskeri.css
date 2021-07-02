@@ -1,0 +1,14 @@
+body:after{
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: -1;
+  width: 200%;
+  height: 200%;
+  background-image: url(images/kisaskeri/arkaplan1.jpg);
+  background-size: contain;
+  background-position: 600px -200px;
+  filter: blur(3px);

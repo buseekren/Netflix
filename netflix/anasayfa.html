@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+  	
+  	<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+  	<link rel="stylesheet" type="text/css" href="anasayfa.css">
+  	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <style>
+      .sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: white;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+  </head>
+      
+  <body>
+      <div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">AKSİYON</a>
+  <a href="#">MACERA</a>
+  <a href="#">ANİMASYON</a>
+  <a href="#">BİYOGRAFİ</a>
+  <a href="#">KOMEDİ</a>
+  <a href="#">SUÇ</a>
+  <a href="#">BELGESEL</a>        
+  <a href="#">DRAM</a>          
+  <a href="#">FANTASTİK</a> 
+  <a href="#">TARİHİ</a>        
+  <a href="#">KORKU</a> 
+  <a href="#">BİLİM KURGU</a>          
+  <a href="#">ROMANTİK</a>    
+  <a href="#">GERİLİM</a>
+  <a href="#">VAHŞİ BATI</a>          
+        
+</div>
+
+<div id="main">
+  <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;KATEGORİLER</span>
+</div>
+
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+</script>
+      
+  	  <nav class="navbar navbar-default"> 
+  	  	<div class="container">
+  	  		<div class="navbar-header">
+  	  			
+  	  		</div>
+  	  	</div>
+  	  </nav>
+
+  	  <div class="container">
+  	  	<div class="jumbotron">
+  	  		<h3 class="text-center">FİLM ARAMA</h3>
+  	  		<form id="searchForm">
+  	  			<input type="text" class="form-control" id="searchText" placeholder="FİLM">
+  	  		</form>
+  	  	</div>
+  	  </div>
+
+  	  <div class="container">
+  	  	<div id="movies" class="row"></div>
+  	  </div>
+       <br>  
+       
+       <h3 style="text-align: center">EN ÇOK İZLENİLENLER</h3> 
+  	  <script
+	  src="https://code.jquery.com/jquery-3.3.1.min.js"
+	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	  crossorigin="anonymous"> 
+	  </script>
+	  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	  <script src="js/main.js"></script>
+      <script>
+      $(document).ready(() => {
+  $("#searchForm").on('submit', (e) => {
+    e.preventDefault();
+    let searchText = $("#searchText").val();
+    getMovies(searchText);
+  });
+});
+
+function getMovies(searchText){
+  axios.get("https://api.themoviedb.org/3/search/movie?api_key=98325a9d3ed3ec225e41ccc4d360c817&language=en-US&query=" + searchText)
+    .then(function (response) {
+      let movies = response.data.results;
+      let output = '';
+      $.each(movies, (index, movie) => {
+        output+=`
+          <div class="col-md-3">
+            <div class="well text-center">
+              <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}">
+              <h5>${movie.title}</h5>
+              <a onclick="movieSelected('${movie.id}')" class="btn btn-primary" href="#">Movie Details</a>
+            </div>
+          </div>
+        `;
+      });
+      $('#movies').html(output);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+function movieSelected(id){
+  sessionStorage.setItem('movieId', id);
+  window.location = 'movie.html';
+  return false;
+}
+
+function getMovie(){
+  let movieId = sessionStorage.getItem('movieId');
+  axios.get("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=98325a9d3ed3ec225e41ccc4d360c817")
+    .then(function (response) {
+    let movie = response.data;
+ 
+    let output = `
+        <div class="row">
+          <div class="col-md-4">
+            <img src="${movie.poster_path}" class="thumbnail">
+          </div>
+          <div class="col-md-8">
+            <h2>${movie.title}</h2>
+            <ul class="list-group">
+              <li class="list-group-item"><strong>Genre:</strong> ${movie.Genre}</li>
+              <li class="list-group-item"><strong>Released:</strong> ${movie.Released}</li>
+              <li class="list-group-item"><strong>Rated:</strong> ${movie.Rated}</li>
+              <li class="list-group-item"><strong>IMDB Rating:</strong> ${movie.imdbRating}</li>
+              <li class="list-group-item"><strong>Director:</strong> ${movie.Director}</li>
+              <li class="list-group-item"><strong>Writer:</strong> ${movie.Writer}</li>
+              <li class="list-group-item"><strong>Actors:</strong> ${movie.Actors}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="well">
+            <h3>Plot</h3>
+            ${movie.Plot}
+            <hr>
+            <a href="http://imdb.com/title/${movie.imdbID}" target="_blank" class="btn btn-primary">View IMDB</a>
+            <a href="index.html" class="btn btn-default">Go Back To Search</a>
+          </div>
+        </div>
+    `;
+    $('#movie').html(output);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+  var movieDB = [
+           {title: "Yüzüklerin Efendisi : Yüzük Kardeşliği",
+            rating: 5,
+            hasWatched: true,
+            runtime: 178,
+            synopsis: "Yüzüklerin Efendisi: Yüzük Kardeşliği, dünyanın kaderini değişterecek olan yüzükten kurtulmak için verilen mücadeleyi konu ediyor.",
+            background:"url('images/lotr/lotr.jpg')"
+           },
+           {title: "Esaretin Bedeli",
+            rating: 5,
+            hasWatched: false,
+            runtime: 140,
+            synopsis: "Esaretin Bedeli, Andy ve Red isimli iki mahkumun parmaklıklar ardında kurdukları dünyanın hikayesini anlatıyor",
+            background: "url('images/esaretin_bedeli.jpg')"
+           },
+           {title: "Yıldızlararası",
+            rating: 4.5,
+            hasWatched: false,
+            runtime: 160,
+            synopsis: "Yıldızlararası'nda, teknik bilgisi ve becerisi yüksek olan Cooper, geniş mısır tarlalarında çiftçilik yaparak geçinmektedir; amacı iki çocuğuna güvenli bir hayat sunmaktır. Onlarla yaşayan Büyükbaba Donald çocuklara göz kulak olurken, henüz 10 yaşındaki kızı Murph şaşırtıcı bir zekaya sahiptir.Biliminsanı kariyerini özleyen Cooper'un karşısına bir gün beklenmedik bir teklif çıkar ve zorlu bir karar alması gerekir",
+            background: "url('images/interstellar.jpg')"
+           },
+           {title: "Kaptan Amerika: Kış Askeri",
+            rating: 3.5,
+            hasWatched: true,
+            runtime: 136,
+            synopsis:"Steve Rogers, Nick Fury ve gizli SHIELD örgütü ile işbirliğini koruyarak modern dünyaya ayak uydurmaya çalışıyor. Devam filminde öykü bu sefer sosyalist dönem Rusya'sına uzanıyor. SSCB döneminde özel kuvvetler içerisinde yetiştirilen ve Winter Soldier (Kış Askeri) adı verilen bir adam aslında tam bir ölüm makinasıdır. Rusya tarafından donmuş bir gölde bulunur ve önüne çıkan her şeyi yerle bir etmeye kararlıdır.",
+            background: "url('images/winter soldier.jpg')"
+           }
+        
+];
+
+function printMovieInfo(element) {
+  if (element.hasWatched)
+    console.log("You have watched " + element.title + " - " + element.rating + " stars");
+  else
+    console.log("You have not seen " + element.title + " - " + element.rating + " stars");
+}
+
+// console stuff
+movieDB.forEach(printMovieInfo);
+
+movieDB.forEach(createCard);
+
+function createCard(element, i){
+  // card
+  var card = document.createElement('div');
+  card.setAttribute("class", "movie-card");
+  card.style.backgroundImage = element.background;
+  
+  // title
+  var title = document.createElement('h1');
+  title.innerText = element.title;
+  card.appendChild(title);
+  
+  // runtime
+  var runtime = document.createElement('span');
+  runtime.innerText = element.runtime + " min";
+  card.appendChild(runtime);
+  
+  // rating
+  var star = document.createElement("i");
+  star.setAttribute("class", "fas fa-star");
+  var rating = document.createElement('span');
+  rating.innerText = element.rating + " ";
+  rating.appendChild(star);
+  card.appendChild(rating);
+  
+  // synopsis
+  var synopsis = document.createElement('p');
+  synopsis.innerText = element.synopsis;
+  card.appendChild(synopsis);
+  
+  // watch/watch again
+  var watch = document.createElement('button');
+  watch.setAttribute("class", "watch");
+  if (element.hasWatched == false)
+    watch.innerText = "FİLMİ İZLE";
+  else
+    watch.innerText = "YENİDEN İZLE";
+  card.appendChild(watch);
+  
+  document.body.appendChild(card);
+}        
+          
+      </script>
+  </body>
+     
+  </html>
